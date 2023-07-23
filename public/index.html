@@ -14,15 +14,31 @@
             <input id="msg" autocomplete="off" />
             <button>Send</button>
         </form>
-        <script src="../socket.io/socket.io.js"></script>
+        
+        <script src="/socket.io/socket.io.js"></script>
+
         <script>
             msg = document.getElementById("msg");
             messages = document.getElementById("messages");
-           
+
+            const username = prompt('Please enter your name');
+
+            const namespace = '/' + prompt('Please choose your group \n / \n js \n php');
+            
+            const socket = io(namespace);
+            
             socket.on('message', msg => {
                 addMessage(msg);
                 window.scrollTo(0, document.body.scrollHeight);
             });
+            
+            function sendMessage(){
+                if(msg.value){
+                    socket.emit('message', username + ' : ' + msg.value);
+                    msg.value = '';
+                }
+                return false;
+            }
 
             function addMessage(msg) {
                 let li = document.createElement("li");
